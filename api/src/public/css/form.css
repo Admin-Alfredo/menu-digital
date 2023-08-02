@@ -1,0 +1,33 @@
+.field-container {
+    width: 100%;
+}
+.field:last-child {
+    min-width: 100px;
+    flex: 1;
+}
+
+.field {
+    width: 100%;
+}
+
+.field-text {
+    height: 45px;
+    width: 100%;
+    background-color: #37393bda;
+    border: none;
+    font-size: 1.3rem;
+    color: #fff;
+    padding: 5px 10px;
+    margin: 10px 0px;
+}
+
+.button {
+    height: 40px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    color: #fff;
+    background-color: #ec700b;
+    transition: all .3s;
+}

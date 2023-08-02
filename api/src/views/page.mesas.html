@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/theme.css">
+    <link rel="stylesheet" href="/css/form.css">
+    <link rel="stylesheet" href="/css/util.css">
+    <title>2ª passo</title>
+    <style>
+        .mesa {
+            width: 100%;
+            height: 450px;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+
+        .wrapper-mesas {
+            padding: 15px;
+        }
+
+        .mesa_select-btn {
+            border: none;
+            padding: 15px;
+            font-weight: 800;
+            background-color: chartreuse;
+            color: #333;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .mesa_select-btn:disabled {
+            background-color: #eee;
+            color: #fff;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Mesas</h1>
+    <h1>SELECIONA UMA MESA</h1>
+    <div class="wrapper-mesas">
+        <div class="mesa">
+            <button class="mesa_select-btn">Ocupar mesa</button>
+        </div>
+    </div>
+
+    <script>
+        const wrapperMesa = document.querySelector('.wrapper-mesas')
+        function fetchMesas() {
+            fetch('http://localhost:3200/api/mesas', { method: "GET" })
+                .then(res => {
+                    console.log("Status: ", res.status)
+                    if (res.status >= 400) {
+                        return Promise.reject({ message: "Erro ao pedir mesas!" })
+                    }
+                    return res.json()
+                }).then(payload => {
+                    const mesaDOM = wrapperMesa.querySelector('.mesa')
+                    payload.data.map(mesa => {
+                        const mesaDOMCloneNode = mesaDOM.cloneNode(true)
+                        const btnSelectMesa = mesaDOMCloneNode.querySelector('.mesa_select-btn')
+                        btnSelectMesa.textContent = "Ocupar mesa "+ mesa.referencia
+                        btnSelectMesa.dataset.mId = mesa._id
+                        btnSelectMesa.addEventListener('click', (e) => handlerSelectorMesa(e, mesa._id))
+
+                        if (mesa.ocupado)
+                            btnSelectMesa.disabled = true
+
+                        // mesaDOMCloneNode.textContent = mesa.referencia
+                        wrapperMesa.appendChild(mesaDOMCloneNode)
+                    })
+                    wrapperMesa.removeChild(mesaDOM)
+                }).catch(error => {
+                    console.error("[ERROR] ", error.message)
+                })
+        }
+        function handlerSelectorMesa(e, id) {
+            fetch('http://localhost:3200/api/mesas/' + id + '/ocupar', {
+                method: 'PUT',
+                headers: { 'Content-type': 'application/json' }
+            }).then(res => {
+                if (res.status >= 400)
+                    return Promise.reject({ message: "Erro ao pedir mesas!" })
+                return res.json()
+            }).then(payload => {
+                console.log(payload)
+            }).catch(error => {
+                console.error("[ERROR] ", error.message)
+            })
+
+        }
+        fetchMesas()
+    </script>
+</body>
+
+</html>

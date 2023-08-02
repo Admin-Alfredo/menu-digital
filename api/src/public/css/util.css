@@ -1,0 +1,39 @@
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+
+.button:hover {
+    background-color: #c25a06f1;
+}
+
+.btn-submit {
+    margin: 20px 0px 10px 0px;
+    height: 48px;
+}
+
+.rounded-top-right {
+    border-top-right-radius: 6px;
+}
+
+.rounded-top-left {
+    border-top-left-radius: 6px;
+}
+
+.rounded-bottom-right {
+    border-bottom-right-radius: 6px;
+}
+
+.rounded-bottom-left {
+    border-bottom-left-radius: 6px;
+}
+
+.line-devider-right {
+    border-right: 2px solid #111111;
+}

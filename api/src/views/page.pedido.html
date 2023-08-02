@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-pt">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1ª Passo</title>
+  <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/form.css">
+  <link rel="stylesheet" href="/css/util.css">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #form {
+      margin-top: 150px;
+      width: 470;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      z-index: 999;
+
+    }
+
+    #form>h1 {
+      margin: 30px 0px;
+      text-align: center;
+    }
+
+    .bg-image {
+      position: absolute;
+      height: 200px;
+      width: 200px;
+      background-image: url(/assets/hot-chocolate-149896_640.png);
+      background-repeat: no-repeat;
+      background-size: 200px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-image"></div>
+  <form id="form">
+    <h1>Inicia sua reserva <br> no digital menu</h1>
+
+    <div class="field-container flex-row">
+      <div class="field line-devider-right">
+        <label>Nome do cliente</label>
+        <input type="text" name="nome" class="field-text rounded-top-left rounded-bottom-left" />
+      </div>
+      <div class="field">
+        <label>Pessoas</label>
+        <select name="num_de_cliente" class="field-text rounded-top-right rounded-bottom-right">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>line-devider-right
+        </select>
+      </div>
+    </div>
+    <input type="submit" value="OK" class="button btn-submit">
+  </form>
+
+  <script>
+    class Pedido {
+      constructor(nome, numDeCliente) {
+        this.nome = nome
+        this.num_de_cliente = numDeCliente
+      }
+    }
+    const form = document.getElementById('form')
+    form.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const nome = e.target.nome.value
+      const num_de_cliente =  e.target.num_de_cliente.value
+
+      const pedido = new Pedido(nome, parseInt(num_de_cliente))
+      console.log(pedido)
+      fetch('http://localhost:3200/api/pedidos', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(pedido)
+      })
+        .then(res => {
+          console.log("Status: ", res.status)
+          if (res.status >= 400) {
+            return Promise.reject({ message: "Erro ao registrar pedido" })
+          }
+          return res.json()
+        })
+        .then(payload => {
+          location.replace(`/mesas?pid=${payload.data._id}`)
+        })
+        .catch(error => {
+          console.error("[ERROR] ", error.message)
+        })
+    })
+  </script>
+</body>
+
+</html>
